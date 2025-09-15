@@ -1,0 +1,88 @@
+#!/bin/bash
+let isRunning=1
+
+while((isRunning!=0))
+do
+echo "1-Create a New Directory"
+echo "2-Delete an Existing Directory"
+echo "3-List all Files in a Directory"
+echo "4-Count Number of files"
+echo "5-Compute the Size of the Directory"
+echo "6-Exit"
+read -p "Enter the Required Option:" option
+if [[ $option -eq 1 ]]
+then
+echo "Enter the Name of the Directory:"
+read name
+$(mkdir "${name}")
+echo "Directory is Created"
+elif [[ $option -eq 2 ]]
+then
+echo "Enter the Name of the Directory to Delete:"
+read name
+if [[ -d "${name}" ]]
+then
+$(rm -rf "${name}")
+else
+echo "Not a Directory"
+fi
+elif [[ $option -eq 3 ]]
+then
+echo "Enter the Name of the Directory"
+read name
+if [[ -d "${name}" ]]
+then
+for file in "${name}"/*
+do
+echo "${file}"
+done
+else
+echo "Not a Directory"
+fi
+elif [[ $option -eq 4 ]]
+then
+echo "Enter the Name of the Directory"
+read name
+let count=0
+if [[ -d "${name}" ]]
+then
+for file in "${name}"/*
+do
+if [[ -f "${file}" ]]
+then
+((count+=1))
+fi
+done
+echo "No of files in a directory:${count}"
+else
+echo "Not a Directory"
+fi
+
+elif [[ $option -eq 5 ]]
+then
+echo "Enter the Name of the Directory"
+read name
+let Totalsize=0
+if [[ -d "${name}" ]]
+then
+for size in $(du | cut -f1)
+do
+((Totalsize+=$size))
+done
+Totalsize=$(echo "scale=2; $Totalsize / 1024 " | bc )
+echo "The Total Size of the Directory is:${Totalsize}"
+else
+echo "Not a directory"
+fi
+elif [[ $option -eq 6 ]]
+then
+echo "Programme Ended"
+isRunning=0
+break
+else
+echo "Invalid Option Enter Again"
+fi
+echo " "
+echo " "
+done
+echo "!! Thank You !!!"
